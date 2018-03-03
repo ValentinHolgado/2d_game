@@ -16,12 +16,12 @@ enum Movement {
     UP, LEFT, DOWN, RIGHT, NONE
 };
 
-class InputSystem {
+class InputHandler {
 
 public:
-    InputSystem(entt::DefaultRegistry *registry) : registry_(registry) {}
+    InputHandler() = default;
 
-    void Handle(const SDL_Event *pEvent) {
+    static void Handle(entt::DefaultRegistry &registry, const SDL_Event *pEvent) {
         Movement movement = NONE;
         Uint32 type = 0;
         type = pEvent->type;
@@ -49,13 +49,13 @@ public:
 
         if (movement == NONE) return;
 
-        UpdateEntities(registry_, movement, type);
+        UpdateEntities(registry, movement, type);
     }
 
 private:
-    void UpdateEntities(entt::DefaultRegistry *es, const Movement &movement, Uint32 type) const {
-        for (auto entity : es->view<InputComponent, DirectionComponent>()) {
-            auto &direction = es->get<DirectionComponent>(entity);
+    static void UpdateEntities(entt::DefaultRegistry &registry, const Movement &movement, Uint32 type) {
+        for (auto entity : registry.view<InputComponent, DirectionComponent>()) {
+            auto &direction = registry.get<DirectionComponent>(entity);
 
             switch (type) {
                 case SDL_KEYDOWN:
@@ -94,9 +94,6 @@ private:
             }
         }
     }
-
-private:
-    entt::DefaultRegistry *registry_;
 };
 
 #endif //INC_2DGAME_INPUTSYSTEM_H

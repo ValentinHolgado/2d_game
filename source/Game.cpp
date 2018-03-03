@@ -7,6 +7,7 @@
 #include "components/PositionComponent.h"
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
+#include "systems/SDLEventSystem.h"
 
 SDL_Renderer *Game::renderer = nullptr;
 
@@ -29,6 +30,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 }
 
 void Game::initSystems() {
+    systems_.emplace_back(std::make_unique<SDLEventSystem>(isRunning));
     systems_.emplace_back(std::make_unique<MovementSystem>());
     systems_.emplace_back(std::make_unique<RenderSystem>());
 }
@@ -55,26 +57,6 @@ void Game::initGraphics(const char *title, int xPos, int yPos, int width, int he
         isRunning = true;
     } else {
         isRunning = false;
-    }
-}
-
-// TODO: Handle all events in a separate system.
-void Game::HandleEvents() {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                isRunning = false;
-                break;
-
-            case SDL_KEYDOWN:
-            case SDL_KEYUP:
-                inputSystem.Handle(&event);
-                break;
-
-            default:
-                break;
-        }
     }
 }
 
