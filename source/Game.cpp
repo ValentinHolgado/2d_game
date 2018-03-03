@@ -8,6 +8,8 @@
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
 #include "systems/SDLEventSystem.h"
+#include "components/CollisionComponent.h"
+#include "systems/CollisionSystem.h"
 
 SDL_Renderer *Game::renderer = nullptr;
 
@@ -24,13 +26,18 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 
     initSystems();
 
-    auto player = registry_.create<InputComponent, PositionComponent, DirectionComponent>();
-
+    auto player = registry_.create<InputComponent, PositionComponent, DirectionComponent, CollisionComponent>();
     registry_.assign<SpriteComponent>(player, "../assets/character_right.png");
+
+
+    auto other_thing = registry_.create<CollisionComponent>();
+    registry_.assign<PositionComponent>(other_thing, 100, 115);
+    registry_.assign<SpriteComponent>(other_thing, "../assets/character_right.png");
 }
 
 void Game::initSystems() {
     systems_.emplace_back(std::make_unique<SDLEventSystem>(isRunning));
+    systems_.emplace_back(std::make_unique<CollisionSystem>());
     systems_.emplace_back(std::make_unique<MovementSystem>());
     systems_.emplace_back(std::make_unique<RenderSystem>());
 }
