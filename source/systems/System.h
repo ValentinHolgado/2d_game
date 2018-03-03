@@ -17,7 +17,7 @@ public:
     System(System &&) = default;
     System &operator=(System &&) = default;
 
-    virtual void update(entt::DefaultRegistry &es, double dt) = 0;
+    virtual void Update(entt::DefaultRegistry &registry, double dt) = 0;
 };
 
 #endif //INC_2DGAME_SYSTEM_H

@@ -14,7 +14,7 @@ class MovementSystem : public System {
 public:
     MovementSystem() = default;
 
-    void update(entt::DefaultRegistry &registry, double dt) override {
+    void Update(entt::DefaultRegistry &registry, double dt) override {
         for (auto entity : registry.view<PositionComponent, DirectionComponent>()) {
             auto &position = registry.get<PositionComponent>(entity);
             auto &direction = registry.get<DirectionComponent>(entity);

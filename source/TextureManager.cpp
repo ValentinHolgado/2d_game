@@ -5,7 +5,7 @@
 std::map<std::string, SDL_Texture*> TextureManager::textures;
 
 SDL_Texture *TextureManager::LoadTexture(const char *fileName) {
-    if (fileName == NULL || fileName == nullptr) {
+    if (fileName == NULL) {
         return nullptr;
     }
 

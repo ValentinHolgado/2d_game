@@ -9,6 +9,7 @@
 #include "SDL2/SDL.h"
 #include "SDL_image.h"
 #include "systems/System.h"
+#include "systems/InputSystem.h"
 #include <iostream>
 #include <vector>
 
@@ -16,24 +17,31 @@ class Game {
 
 public:
     Game();
+
     ~Game();
 
-    void init(const char* title, int xPos, int yPos, int width, int height, bool fullscreen);
+    void init(const char *title, int xPos, int yPos, int width, int height, bool fullscreen);
 
-    void handleEvents();
+    void HandleEvents();
+
     void Update(double deltaTime);
-    void render();
-    void clean();
 
-    bool running();
+    void Clean();
 
-    static SDL_Renderer* renderer;
+    bool Running();
+
+    static SDL_Renderer *renderer;
 
 private:
     bool isRunning = false;
-    SDL_Window* window;
+    SDL_Window *window;
     entt::DefaultRegistry registry_;
+    InputSystem inputSystem{&registry_};
     std::vector<std::unique_ptr<System>> systems_;
+
+    void initGraphics(const char *title, int xPos, int yPos, int width, int height, bool fullscreen);
+
+    void initSystems();
 };
 
 

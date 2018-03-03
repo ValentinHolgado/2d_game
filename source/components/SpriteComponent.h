@@ -7,8 +7,8 @@
 
 #include <string>
 
-struct TextureComponent {
-    char* texturePath = "../assets/character_right.png";
+struct SpriteComponent {
+    std::string texturePath;
     int w = 32, h = 32;
 };
 

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${2DGame_SOURCE_DIR}/cmake")
 
-set(SOURCE_FILES main.cpp source/Game.cpp source/Game.h source/utils/Log.h source/GameObject.cpp source/GameObject.h source/TextureManager.h source/TextureManager.cpp source/GameMap.cpp source/GameMap.h source/components/PositionComponent.h source/systems/System.h source/systems/MovementSystem.h source/components/DirectionComponent.h source/systems/RenderSystem.h source/components/TextureComponent.h)
+set(SOURCE_FILES main.cpp source/Game.cpp source/Game.h source/utils/Log.h source/GameObject.cpp source/GameObject.h source/TextureManager.h source/TextureManager.cpp source/GameMap.cpp source/GameMap.h source/components/PositionComponent.h source/systems/System.h source/systems/MovementSystem.h source/components/DirectionComponent.h source/systems/RenderSystem.h source/components/SpriteComponent.h source/systems/InputSystem.h source/components/InputComponent.h)
 add_executable(2DGame ${SOURCE_FILES})
 
 find_package(SDL2 REQUIRED)

@@ -3,22 +3,14 @@
 //
 
 #include "Game.h"
-#include "utils/Log.h"
 #include "GameObject.h"
-#include "GameMap.h"
 #include "components/PositionComponent.h"
 #include "systems/MovementSystem.h"
 #include "systems/RenderSystem.h"
-#include <entt.hpp>
-
-GameObject *player;
-
-GameMap *map;
 
 SDL_Renderer *Game::renderer = nullptr;
 
 Game::Game() {
-
 }
 
 Game::~Game() {
@@ -26,6 +18,22 @@ Game::~Game() {
 }
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool fullscreen) {
+
+    initGraphics(title, xPos, yPos, width, height, fullscreen);
+
+    initSystems();
+
+    auto player = registry_.create<InputComponent, PositionComponent, DirectionComponent>();
+
+    registry_.assign<SpriteComponent>(player, "../assets/character_right.png");
+}
+
+void Game::initSystems() {
+    systems_.emplace_back(std::make_unique<MovementSystem>());
+    systems_.emplace_back(std::make_unique<RenderSystem>());
+}
+
+void Game::initGraphics(const char *title, int xPos, int yPos, int width, int height, bool fullscreen) {
     Uint32 flags = fullscreen ? SDL_WINDOW_FULLSCREEN : 0;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -48,48 +56,35 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     } else {
         isRunning = false;
     }
-
-    this->systems_.emplace_back(std::make_unique<MovementSystem>());
-    this->systems_.emplace_back(std::make_unique<RenderSystem>());
-
-    registry_.create<PositionComponent, DirectionComponent, TextureComponent>();
-
-    player = new GameObject("../assets/character_right.png", 0, 0);
-    map = new GameMap();
 }
 
-void Game::handleEvents() {
+// TODO: Handle all events in a separate system.
+void Game::HandleEvents() {
     SDL_Event event;
-    SDL_PollEvent(&event);
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                isRunning = false;
+                break;
 
-    switch (event.type) {
-        case SDL_QUIT:
-            isRunning = false;
-            break;
+            case SDL_KEYDOWN:
+            case SDL_KEYUP:
+                inputSystem.Handle(&event);
+                break;
 
-        default:
-            break;
+            default:
+                break;
+        }
     }
 }
 
 void Game::Update(double deltaTime) {
-    player->Update();
-
-    SDL_RenderClear(renderer);
-    map->DrawMap();
-
-    for (auto& system : systems_) {
-        system->update(registry_, deltaTime);
+    for (auto &system : systems_) {
+        system->Update(registry_, deltaTime);
     }
-
-    SDL_RenderPresent(renderer);
 }
 
-void Game::render() {
-    //player->Render();
-}
-
-void Game::clean() {
+void Game::Clean() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
@@ -97,6 +92,6 @@ void Game::clean() {
     LOG("Game cleaned");
 }
 
-bool Game::running() {
+bool Game::Running() {
     return isRunning;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "source/Game.h"
+#include "source/utils/Log.h"
 
 Game *game = nullptr;
 
@@ -13,12 +14,11 @@ int main() {
     Uint32 frameStart;
     int frameTime;
 
-    while (game->running()) {
+    while (game->Running()) {
         frameStart = SDL_GetTicks();
 
-        game->handleEvents();
+        game->HandleEvents();
         game->Update(frameTime);
-        game->render();
 
         frameTime = SDL_GetTicks() - frameStart;
 
@@ -27,7 +27,7 @@ int main() {
         }
     }
 
-    game->clean();
+    game->Clean();
 
     return 0;
 }
